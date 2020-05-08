@@ -43,9 +43,15 @@ const {
 // allí la recursión
 
 var objContains = function(obj, prop, value){
- 
+  for (var property in obj) {
+    if (property === prop && obj[property] === value) {
+      return true;
+    } else if (typeof (obj[property]) === "object") {
+      return objContains(obj[property], prop, value);
+    }
+  }
+  return false; 
 }
-
 
 // EJERCICIO 2
 // Implementar la función countArray: a partir de un array en el cual cada posición puede ser un único
@@ -58,7 +64,15 @@ var objContains = function(obj, prop, value){
 // [Para más información del método: https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/isArray]
 
 var countArray = function(array){
-  
+  var acc = 0;
+  for (var i = 0; i < array.length; i ++) {
+    if (!Array.isArray(array[i])) {
+      acc = acc + array[i];
+    } else {
+      acc = acc + countArray(array[i]);
+    }
+  }
+  return acc;
 }
 
 // ---------------------
@@ -78,9 +92,17 @@ var countArray = function(array){
 //    lista.size(); --> 3
 
 LinkedList.prototype.size = function(){
- 
+  if (!this.head) {
+    return 0;
+  }
+  var linkedListSize = 1;
+  var current = this.head;
+  while (current.next !== null) {
+    current = current.next;
+    linkedListSize++
+  }
+  return linkedListSize;
 }
-
 
 // EJERCICIO 4
 // Implementar el método addInPos dentro del prototype de LinkedList que deberá agregar un elemento en
@@ -99,7 +121,7 @@ LinkedList.prototype.size = function(){
 //    sin antes tener cargada la posición 0 y 1.
 
 LinkedList.prototype.addInPos = function(pos, value){
-  
+
 }
 
 // EJERCICIO 5
@@ -110,7 +132,7 @@ LinkedList.prototype.addInPos = function(pos, value){
 //    Lista nueva luego de aplicar el reverse: Head --> 13 --> 10 --> 4 --> 1 --> null
 
 LinkedList.prototype.reverse = function(){
- 
+
 }
 
 
@@ -164,9 +186,12 @@ var cardGame = function(mazoUserA, mazoUserB){
 //       5
 
 var generateBST = function(array){
- 
+  var binaryTree = new BinarySearchTree(array[0]);
+  for (var i = 1; i < array.length; i ++) {
+    binaryTree.insert(array[i]);
+  }
+  return binaryTree
 }
-
 
 // ---------------
 
@@ -183,10 +208,25 @@ var generateBST = function(array){
 //    binarySearch(array, 2) --> Devolvería 1 ya que array[1] = 2
 //    [Donde 2 sería el número sobre el cuál queremos saber su posición en el array]
 
-
 var binarySearch = function (array, target) {
-
-  
+  var first = 0;
+  var last = array.length - 1;
+  var position = -1;
+  var found = false;
+  var middle;
+ 
+  while (found === false && first <= last) {
+    middle = Math.floor((first + last)/2);
+    if (array[middle] == target) {
+      found = true;
+      position = middle;
+    } else if (array[middle] > target) {
+      last = middle - 1;
+    } else {
+      first = middle + 1;
+    }
+  }
+  return position;
 }
 
 // EJERCICIO 9
@@ -197,16 +237,28 @@ var binarySearch = function (array, target) {
 // Ejemplo:
 //     selectionSort([1, 6, 2, 5, 3, 4]) --> [1, 2, 3, 4, 5, 6]
 
-
 var selectionSort = function(array) {
-  
+  for (var i = 0; i < array.length; i ++) {
+    var min = i;
+    for (var j = i + 1; j < array.length; j ++) {
+      if (array[j] < array[min]) {
+        min = j;
+      }
+    }
+    if (min !== i) {
+      var aux = array[i];
+      array[i] = array[min];
+      array[min] = aux;
+    }
+  }
+  return array;
 }
 
 // ----- Closures -----
 
 // EJERCICIO 10
 // Implementar la función closureSum que recibe un parámetro (numFijo) y que debe retornar otra función
-// que también debe recibir un parámetro y debe devolver la suma de este últimom parámetro con numFijo.
+// que también debe recibir un parámetro y debe devolver la suma de este último parámetro con numFijo.
 // Ejemplo 1:
 //    var sumaCinco = closureSum(5);
 //    sumaCinco(2);  --> Devolverá 7 (Ya que 2 + 5 = 7)
@@ -217,7 +269,9 @@ var selectionSort = function(array) {
 //    sumaDiez(11); --> Devolverá 21 (Ya que 11 + 10 = 21)
 
 function closureSum(numFijo) {
- 
+  return function(value) {
+    return value + numFijo;
+  }
 }
 
 // -------------------
