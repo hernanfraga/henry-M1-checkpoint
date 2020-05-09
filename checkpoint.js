@@ -160,10 +160,23 @@ LinkedList.prototype.reverse = function(){
 //    Primer mano:
 //     A --> 4  vs  6 <-- B [6 > 4 entones gana la mano B y pone ambas cartas en su mazo, colocando primero la suya]
 //    - mazoUserA = [2,10,11]
-//    - mazoUserB = [6,9,10,3,6,4]
+//    - mazoUserB = [9,10,3,6,4]
 
 var cardGame = function(mazoUserA, mazoUserB){
-
+  while (mazoUserA.size() !== 0 && mazoUserB.size() !== 0) {
+    var cartaA = mazoUserA.dequeue();
+    var cartaB = mazoUserB.dequeue();
+    if(cartaA > cartaB){
+      mazoUserA.enqueue(cartaA);
+      mazoUserA.enqueue(cartaB);
+    } else if(cartaA < cartaB){
+      mazoUserB.enqueue(cartaB);
+      mazoUserB.enqueue(cartaA);
+    }
+  }
+  if (mazoUserA.size() === 0 && mazoUserB.size() === 0) return "Game tie!";
+  if (mazoUserA.size() === 0) return "B wins!";
+  if (mazoUserB.size() === 0) return "A wins!";
 }
 
 // ---------------
