@@ -121,7 +121,21 @@ LinkedList.prototype.size = function(){
 //    sin antes tener cargada la posición 0 y 1.
 
 LinkedList.prototype.addInPos = function(pos, value){
-
+  if (!this.head) return false;
+  var newNode = new Node(value); // 
+  var current = this.head;
+  var currentNext = this.head.next;
+  
+  var acc = 1;
+  
+  while (current.next && acc < pos) {
+    current = current.next;
+    currentNext = currentNext.next;
+    acc = acc + 1;
+  }
+  current.next = newNode;
+  newNode.next = currentNext;
+  return true;
 }
 
 // EJERCICIO 5
